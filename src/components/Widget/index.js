@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -346,16 +347,24 @@ class Widget extends Component {
       dispatch(pullSession());
 
       // Request a session from server
-      const localId = this.getSessionId();
+      // const localId = this.getSessionId();
       socket.on('connect', () => {
+        const localId = this.getSessionId();
+        console.log(`### localId: ${localId}`);
+        console.log('### onConnect');
+        console.log(`### emit session_request: ${JSON.stringify({ session_id: localId })}`);
+
         socket.emit('session_request', { session_id: localId });
       });
 
       // When session_confirm is received from the server:
       socket.on('session_confirm', (sessionObject) => {
+        const localId = this.getSessionId();
         const remoteId = (sessionObject && sessionObject.session_id)
           ? sessionObject.session_id
           : sessionObject;
+
+        console.log(`### remoteId: ${remoteId}`);
 
         // eslint-disable-next-line no-console
         console.log(`session_confirm:${socket.socket.id} session_id:${remoteId}`);
@@ -370,12 +379,16 @@ class Widget extends Component {
           // storage.clear();
           // Store the received session_id to storage
 
+          console.log('### localId !== remoteId');
+
           storeLocalSession(storage, SESSION_NAME, remoteId);
           dispatch(pullSession());
           if (sendInitPayload) {
             this.trySendInitPayload();
           }
         } else {
+          console.log('### existing session');
+
           // If this is an existing session, it's possible we changed pages and want to send a
           // user message when we land.
           const nextMessage = window.localStorage.getItem(NEXT_MESSAGE);
