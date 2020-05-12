@@ -10,7 +10,7 @@ import {
   addUserMessage,
   emitUserMessage,
   addResponseMessage,
-  addLinkSnippet,
+  addCarousel,
   addVideoSnippet,
   addImageSnippet,
   addQuickReply,
@@ -35,7 +35,7 @@ import {
 } from 'actions';
 
 import { SESSION_NAME, NEXT_MESSAGE } from 'constants';
-import { isSnippet, isVideo, isImage, isQR, isText } from './msgProcessor';
+import { isVideo, isImage, isQR, isText, isCarousel } from './msgProcessor';
 import WidgetLayout from './layout';
 import { storeLocalSession, getLocalSession } from '../../store/reducers/helper';
 
@@ -300,6 +300,28 @@ class Widget extends Component {
             }
         }
       });
+      // We check that the method is here to prevent crashes on unsupported browsers.
+      if (elements[0] && elements[0].scrollIntoView) {
+        // If I don't use a timeout, the scrollToBottom in messages.jsx
+        // seems to override that scrolling
+        setTimeout(() => {
+          if (/Mobi/.test(navigator.userAgent)) {
+            elements[0].scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
+          } else {
+            const rectangle = elements[0].getBoundingClientRect();
+
+            const ElemIsInViewPort = (
+              rectangle.top >= 0 &&
+                rectangle.left >= 0 &&
+                rectangle.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rectangle.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+            if (!ElemIsInViewPort) {
+              elements[0].scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
+            }
+          }
+        }, 50);
+      }
     }
   }
 
@@ -318,6 +340,8 @@ class Widget extends Component {
       socket.createSocket();
 
       socket.on('bot_uttered', (botUttered) => {
+        // botUttered.attachment.payload.elements = [botUttered.attachment.payload.elements];
+        // console.log(botUttered);
         this.handleBotUtterance(botUttered);
       });
 
@@ -487,15 +511,9 @@ class Widget extends Component {
       this.props.dispatch(addResponseMessage(messageClean.text));
     } else if (isQR(messageClean)) {
       this.props.dispatch(addQuickReply(messageClean));
-    } else if (isSnippet(messageClean)) {
-      const element = messageClean.attachment.payload.elements[0];
+    } else if (isCarousel(messageClean)) {
       this.props.dispatch(
-        addLinkSnippet({
-          title: element.title,
-          content: element.buttons[0].title,
-          link: element.buttons[0].url,
-          target: '_blank'
-        })
+        addCarousel(messageClean)
       );
     } else if (isVideo(messageClean)) {
       const element = messageClean.attachment.payload;
@@ -625,14 +643,19 @@ Widget.defaultProps = {
   oldUrl: '',
   disableTooltips: false,
   defaultHighlightClassname: '',
-  defaultHighlightCss: 'animation: 0.5s linear infinite alternate default-botfront-blinker-animation;',
+  defaultHighlightCss: 'animation: 0.5s linear infinite alternate default-botfront-blinker-animation; outline-style: solid;',
+  // unfortunately it looks like outline-style is not an animatable property on Safari
   defaultHighlightAnimation: `@keyframes default-botfront-blinker-animation {
-    from {
-      outline-color: green;
-      outline-style: none;
+    0% {
+      outline-color: rgba(0,255,0,0);
     }
-    to {
-      outline-style: solid;
+    49% {
+      outline-color: rgba(0,255,0,0);
+    }
+    50% {
+      outline-color:green;
+    }
+    100% {
       outline-color: green;
     }
   }`

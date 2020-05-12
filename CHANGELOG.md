@@ -2,8 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.8.5+nuecho.1](https://https///compare/v0.8.5...v0.8.5+nuecho.1) (2020-04-15)
+## [0.9.0](https://https///compare/v0.8.9...v0.9.0) (2020-05-11)
 
+### [0.8.9](https://https///compare/v0.8.8...v0.8.9) (2020-05-05)
+
+
+### Features
+
+* carousels ([98ee08f](https://https///commit/98ee08f96fe4fec504375931c211a6db8abacdba))
+
+### [0.8.8](https://https///compare/v0.8.7...v0.8.8) (2020-04-24)
+
+
+### Features
+
+* allow disabling/enabling input ([333baea](https://https///commit/333baea0c1b87c6d7a99455a0902a6a0f927b20d))
+* change the color of the send button when input is not empty ([#214](https://https//undefined/issues/214)) ([bd75cc5](https://https///commit/bd75cc50b39aab935e6b54281c7d7caa87a9b4c5))
+
+### [0.8.7](https://https///compare/v0.8.6...v0.8.7) (2020-04-16)
+
+
+### Bug Fixes
+
+* scroll to highlight centered on mobile ([560e44b](https://https///commit/560e44b077b55d8a3038736e62bd88a040dcefe9))
+
+### [0.8.6](https://https///compare/v0.8.5...v0.8.6) (2020-04-16)
+
+
+### Features
+
+* automatically scroll to highlights ([47daa28](https://https///commit/47daa287fdb2d6028f12cf6f3c1cb52847e59815))
+
+
+### Bug Fixes
+
+* markdown was not working any more ([#211](https://https//undefined/issues/211)) ([ba2fe55](https://https///commit/ba2fe5502ce6687068c7538be7ce374a9fea4a86))
+* safari blinking animation ([d121a51](https://https///commit/d121a51544bcd589ac91159a1f30fed17000a1c5))
+* scrolling to highligh with chat open ([a967527](https://https///commit/a967527e26be9505c5d4f82e3c0addc461d45851))
+
+### [0.8.5+nuecho.1](https://https///compare/v0.8.5...v0.8.5+nuecho.1) (2020-04-15)
 
 ### Features
 
